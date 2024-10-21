@@ -1,61 +1,29 @@
-use std::io::{self, BufRead};
+//https://www.hackerrank.com/challenges/plus-minus/problem?isFullScreen=false
 
-/*
- * Заверште функцію 'staircase' нижче.
- *
- * Функція приймає INTEGER n як параметр.
- */
+use std::io;
 
-// Функція, яка малює сходи з символів '#'
-fn staircase(n: i32) -> String {
-    let mut result = String::new(); // Зберігатимемо результат
-    for i in 1..=n {
-        // Додаємо пробіли перед символами '#'
-        let spaces = " ".repeat((n - i) as usize); // Кількість пробілів
-        let hashes = "#".repeat(i as usize); // Кількість символів '#'
-        result.push_str(&format!("{}{}\n", spaces, hashes)); // Додаємо рядок до результату
-    }
-    result // Повертаємо результат
-}
-
-#[allow(dead_code)]
 fn main() {
-    let stdin = io::stdin(); // Отримуємо стандартний ввід
-    let mut stdin_iterator = stdin.lock().lines(); // Локалізуємо строки вводу
+    let mut s1 = String::new();
+    let mut s2 = String::new();
 
-    // Читаємо розмір сходів
-    let n = stdin_iterator.next().unwrap().unwrap().trim().parse::<i32>().unwrap();
+    io::stdin().read_line(&mut s1).ok().expect("Read error");
+    io::stdin().read_line(&mut s2).ok().expect("Read error");
 
-    // Викликаємо функцію staircase
-    let output = staircase(n);
-    print!("{}", output); // Виводимо результат
-}
-
-// Функція для перевірки роботи програми
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_staircase() {
-        let n = 5;
-        let expected_output = "    #\n   ##\n  ###\n ####\n#####\n"; // Очікуваний вихід
-
-        // Викликаємо функцію staircase
-        let output = staircase(n); // Отримуємо результат
-
-        // Перевіряємо, що вивід відповідає очікуваному
-        assert_eq!(output, expected_output);
+    let num_vec = s2.split(" ");
+    let n = s1.trim().parse::<i32>().ok().expect("Parse error");
+    let mut pos = 0;
+    let mut negs = 0;
+    let mut zeroes = 0;
+    for num in num_vec {
+        //println!("{}", num);
+        match num.parse::<i32>().ok().expect("Parse error") {
+            x if x > 0 => pos += 1,
+            x if x < 0 => negs += 1,
+            x if x == 0 => zeroes += 1,
+            _ => (),
+        }
     }
+    println!("{:.6}", pos as f32/n as f32);
+    println!("{:.6}", negs as f32/n as f32);
+    println!("{:.6}", zeroes as f32/n as f32);
 }
-
-/*
-Функція staircase: Реалізована функція, яка малює сходи з символів #. Кількість пробілів зменшується,
-а кількість символів # збільшується в кожному рядку.
-Тест: Додана функція для тестування staircase, яка перевіряє, чи правильно функція малює сходи для тестового випадку.
-Вивід порівнюється з очікуваним.
-
-Зміна типу функції staircase: Тепер вона повертає рядок, що містить сходи.
-Використання push_str: Додаємо кожен рядок до результату.
-Тестування: Тест просто порівнює вихід з очікуваним рядком.
-*/
